@@ -99,9 +99,14 @@ class Tamagotchi {
 
     sleep() {
         if (!this.isAlive) return { message: '💀 Ya no está con nosotros...', success: false };
-        if (this.actionCooldowns.sleep > 0) return { message: `⏳ Espera ${Math.ceil(this.actionCooldowns.sleep)}s`, success: false };
+        if (this.actionCooldowns.sleep > 0 && !this.isSleeping) return { message: `⏳ Espera ${Math.ceil(this.actionCooldowns.sleep)}s`, success: false };
         
         if (this.isSleeping) {
+            // Verificar si ya pasó el tiempo mínimo para despertar
+            const sleepRemaining = this.getSleepRemaining();
+            if (sleepRemaining !== null && sleepRemaining > 0) {
+                return { message: `😴 Aún duerme. Faltan ${this.formatSleepTime(sleepRemaining)}`, success: false };
+            }
             this.isSleeping = false;
             this.energy = Math.min(100, this.energy + 40);
             this.updateMood();
@@ -115,6 +120,13 @@ class Tamagotchi {
         this.energy = Math.min(100, this.energy + 10);
         this.setCooldown('sleep', 60);
         return { message: '😴 Zzz... durmiendo profundamente', success: true };
+    }
+
+    /**
+     * Despierta a la mascota (alias para sleep cuando está durmiendo)
+     */
+    wakeUp() {
+        return this.sleep();
     }
 
     /**

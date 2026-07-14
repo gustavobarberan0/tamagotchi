@@ -540,16 +540,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Mostrar tiempo restante para despertar si está durmiendo
                     if (state.isSleeping && state.sleepTime) {
-                        const sleepDuration = 60000; // 60 segundos
-                        const elapsed = Date.now() - state.sleepTime;
-                        const remaining = Math.max(0, Math.ceil((sleepDuration - elapsed) / 1000));
-                        
-                        if (remaining > 0 && elements.messageArea) {
-                            const messageIcon = elements.messageArea.querySelector('.message-icon');
-                            const messageText = elements.messageArea.querySelector('.message-text');
-                            if (messageIcon && messageText) {
-                                messageIcon.textContent = '⏰';
-                                messageText.textContent = `Despierta en ${remaining}s`;
+                        const sleepRemaining = tamagotchi.getSleepRemaining();
+                        if (sleepRemaining !== null && sleepRemaining > 0) {
+                            const formattedTime = tamagotchi.formatSleepTime(sleepRemaining);
+                            
+                            if (elements.messageArea) {
+                                const messageIcon = elements.messageArea.querySelector('.message-icon');
+                                const messageText = elements.messageArea.querySelector('.message-text');
+                                if (messageIcon && messageText) {
+                                    messageIcon.textContent = '⏰';
+                                    messageText.textContent = `Despierta en ${formattedTime}`;
+                                }
                             }
                         }
                     }
@@ -604,6 +605,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 case 'sleep':
                     result = tamagotchi.sleep();
+                    if (result.success && typeof audio !== 'undefined' && audio.playSleep) audio.playSleep();
+                    break;
+                case 'wake':
+                    result = tamagotchi.wakeUp();
                     if (result.success && typeof audio !== 'undefined' && audio.playSleep) audio.playSleep();
                     break;
                 case 'clean':
