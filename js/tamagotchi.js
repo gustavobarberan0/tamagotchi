@@ -117,6 +117,28 @@ class Tamagotchi {
         return { message: '😴 Zzz... durmiendo profundamente', success: true };
     }
 
+    /**
+     * Obtiene el tiempo restante para despertar (en segundos)
+     */
+    getSleepRemaining() {
+        if (!this.isSleeping || !this.sleepTime) return null;
+        const sleepDuration = 60000; // 60 segundos
+        const elapsed = Date.now() - this.sleepTime;
+        const remaining = Math.max(0, Math.ceil((sleepDuration - elapsed) / 1000));
+        return remaining;
+    }
+
+    /**
+     * Formatea el tiempo restante para mostrarlo
+     */
+    formatSleepTime(seconds) {
+        if (seconds === null) return '';
+        if (seconds < 60) return `${seconds}s`;
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}m ${secs}s`;
+    }
+
     clean() {
         if (!this.isAlive) return { message: '💀 Ya no está con nosotros...', success: false };
         if (this.isSleeping) return { message: '😴 Está durmiendo...', success: false };
