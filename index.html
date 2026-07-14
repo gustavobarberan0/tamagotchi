@@ -3,30 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tamagotchi Dino</title>
+    <title>Tamagotchi Dino - Cuida tu mascota virtual</title>
     <link rel="stylesheet" href="css/style.css">
-    <meta name="description" content="Cuida de tu mascota virtual dinosaurio">
+    <link rel="manifest" href="manifest.json">
+    <meta name="description" content="Cuida de tu mascota virtual dinosaurio. Un juego retro estilo Tamagotchi accesible y responsive.">
     <meta name="theme-color" content="#4CAF50">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tamagotchi Dino">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦕</text></svg>">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
 </head>
 <body>
-    <div class="game-container" role="main" aria-label="Juego Tamagotchi">
+    <!-- Skip link para accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <div class="game-container" role="main" aria-label="Juego Tamagotchi Dino">
         <!-- Header / Barra de Estado -->
-        <header class="status-bar">
+        <header class="status-bar" role="banner">
             <div class="player-info">
                 <h1 id="pet-name" aria-label="Nombre de la mascota">Dino</h1>
-                <span id="level-badge" class="badge" aria-live="polite">Nivel 1</span>
+                <span id="level-badge" class="badge" aria-live="polite" aria-atomic="true">Nivel 1</span>
             </div>
-            <div class="stats-summary">
-                <span id="summary-hunger" class="stat-icon" title="Hambre">🍖 <span id="val-hunger">100</span>%</span>
-                <span id="summary-happiness" class="stat-icon" title="Felicidad">❤️ <span id="val-happiness">100</span>%</span>
-                <span id="summary-energy" class="stat-icon" title="Energía">⚡ <span id="val-energy">100</span>%</span>
+            <div class="stats-summary" role="group" aria-label="Resumen de estadísticas">
+                <span id="summary-hunger" class="stat-icon" title="Hambre" aria-label="Hambre: 100%">🍖 <span id="val-hunger" aria-live="polite">100</span>%</span>
+                <span id="summary-happiness" class="stat-icon" title="Felicidad" aria-label="Felicidad: 100%">❤️ <span id="val-happiness" aria-live="polite">100</span>%</span>
+                <span id="summary-energy" class="stat-icon" title="Energía" aria-label="Energía: 100%">⚡ <span id="val-energy" aria-live="polite">100</span>%</span>
             </div>
         </header>
 
         <!-- Área Principal de la Mascota -->
-        <section class="pet-area" aria-live="polite">
-            <div class="pet-sprite-container">
-                <div id="pet-sprite" class="pet-sprite" aria-label="Mascota virtual">
+        <section class="pet-area" aria-live="polite" aria-atomic="true" aria-label="Área de la mascota">
+            <div class="pet-sprite-container" role="img" aria-label="Mascota virtual dinosaurio">
+                <div id="pet-sprite" class="pet-sprite" aria-hidden="true">
                     <!-- El sprite se dibuja vía CSS/JS -->
                     <div class="eye left"></div>
                     <div class="eye right"></div>
@@ -35,129 +46,138 @@
                 <div id="sleep-indicator" class="overlay-indicator hidden" aria-hidden="true">
                     💤
                 </div>
-                <div id="poop-indicator" class="overlay-indicator hidden" aria-label="Suciedad">
+                <div id="poop-indicator" class="overlay-indicator hidden" aria-label="Hay suciedad que limpiar">
                     💩
                 </div>
             </div>
             
             <!-- Mensaje de tiempo para dormir -->
-            <div id="sleep-timer-display" class="sleep-timer hidden" role="status" aria-live="assertive">
+            <div id="sleep-timer-display" class="sleep-timer hidden" role="status" aria-live="assertive" aria-atomic="true">
                 Despierta en: <span id="time-remaining">00:00</span>
             </div>
         </section>
 
         <!-- Controles de Acción -->
-        <section class="controls-area" role="group" aria-label="Controles de cuidado">
+        <section class="controls-area" role="group" aria-label="Controles de cuidado de la mascota">
             <div class="action-buttons-grid">
-                <button class="action-btn" data-action="feed" aria-label="Alimentar">
-                    <span class="icon">🍖</span>
+                <button class="action-btn" data-action="feed" aria-label="Alimentar a tu mascota" type="button">
+                    <span class="icon" aria-hidden="true">🍖</span>
                     <span class="label">Comer</span>
                 </button>
-                <button class="action-btn" data-action="play" aria-label="Jugar">
-                    <span class="icon">🎾</span>
+                <button class="action-btn" data-action="play" aria-label="Jugar con tu mascota" type="button">
+                    <span class="icon" aria-hidden="true">🎾</span>
                     <span class="label">Jugar</span>
                 </button>
-                <button class="action-btn" data-action="sleep" id="btn-sleep" aria-label="Dormir">
-                    <span class="icon">🌙</span>
+                <button class="action-btn" data-action="sleep" id="btn-sleep" aria-label="Poner a dormir a tu mascota" type="button">
+                    <span class="icon" aria-hidden="true">🌙</span>
                     <span class="label">Dormir</span>
                 </button>
-                <button class="action-btn" data-action="wake" id="btn-wake" class="hidden" aria-label="Despertar" disabled>
-                    <span class="icon">☀️</span>
+                <button class="action-btn" data-action="wake" id="btn-wake" class="hidden" aria-label="Despertar a tu mascota" disabled type="button">
+                    <span class="icon" aria-hidden="true">☀️</span>
                     <span class="label">Despertar</span>
                 </button>
-                <button class="action-btn" data-action="clean" aria-label="Limpiar">
-                    <span class="icon">🧹</span>
+                <button class="action-btn" data-action="clean" aria-label="Limpiar la suciedad de tu mascota" type="button">
+                    <span class="icon" aria-hidden="true">🧹</span>
                     <span class="label">Limpiar</span>
                 </button>
-                <button class="action-btn" data-action="medicine" aria-label="Curar">
-                    <span class="icon">💊</span>
+                <button class="action-btn" data-action="medicine" aria-label="Curar a tu mascota" type="button">
+                    <span class="icon" aria-hidden="true">💊</span>
                     <span class="label">Curar</span>
                 </button>
             </div>
         </section>
 
         <!-- Navegación de Pestañas -->
-        <nav class="tabs-nav" role="tablist" aria-label="Menú principal">
-            <button class="tab-btn active" data-tab="home" role="tab" aria-selected="true">🏠 Inicio</button>
-            <button class="tab-btn" data-tab="stats" role="tab" aria-selected="false">📊 Stats</button>
-            <button class="tab-btn" data-tab="shop" role="tab" aria-selected="false">🛒 Tienda</button>
-            <button class="tab-btn" data-tab="achievements" role="tab" aria-selected="false">🏆 Logros</button>
+        <nav class="tabs-nav" role="tablist" aria-label="Menú principal de navegación">
+            <button class="tab-btn active" data-tab="home" role="tab" aria-selected="true" aria-controls="tab-home" id="tab-btn-home" type="button">🏠 Inicio</button>
+            <button class="tab-btn" data-tab="stats" role="tab" aria-selected="false" aria-controls="tab-stats" id="tab-btn-stats" type="button">📊 Stats</button>
+            <button class="tab-btn" data-tab="shop" role="tab" aria-selected="false" aria-controls="tab-shop" id="tab-btn-shop" type="button">🛒 Tienda</button>
+            <button class="tab-btn" data-tab="achievements" role="tab" aria-selected="false" aria-controls="tab-achievements" id="tab-btn-achievements" type="button">🏆 Logros</button>
         </nav>
 
         <!-- Contenido de Pestañas -->
-        <main class="tab-content">
+        <main id="main-content" class="tab-content" role="tabpanel">
+            <!-- Pestaña Home (Vuelve a mostrar controles si es necesario en mobile) -->
+            <div id="tab-home" class="tab-panel active" role="tabpanel" aria-labelledby="tab-btn-home" tabindex="0">
+                <div class="home-message">
+                    <p>¡Cuida bien de tu Dino!</p>
+                </div>
+            </div>
+            
             <!-- Pestaña Stats Detallados -->
-            <div id="tab-stats" class="tab-panel hidden" role="tabpanel">
+            <div id="tab-stats" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-btn-stats" tabindex="0" aria-live="polite">
                 <h2>Estadísticas Detalladas</h2>
-                <div class="stats-detailed">
+                <div class="stats-detailed" role="group" aria-label="Estadísticas de la mascota">
                     <div class="stat-row">
-                        <label>Hambre:</label>
-                        <progress id="bar-hunger" value="100" max="100"></progress>
-                        <span id="text-hunger">100%</span>
+                        <label for="bar-hunger">Hambre:</label>
+                        <progress id="bar-hunger" value="100" max="100" aria-label="Nivel de hambre"></progress>
+                        <span id="text-hunger" aria-live="polite">100%</span>
                     </div>
                     <div class="stat-row">
-                        <label>Felicidad:</label>
-                        <progress id="bar-happiness" value="100" max="100"></progress>
-                        <span id="text-happiness">100%</span>
+                        <label for="bar-happiness">Felicidad:</label>
+                        <progress id="bar-happiness" value="100" max="100" aria-label="Nivel de felicidad"></progress>
+                        <span id="text-happiness" aria-live="polite">100%</span>
                     </div>
                     <div class="stat-row">
-                        <label>Energía:</label>
-                        <progress id="bar-energy" value="100" max="100"></progress>
-                        <span id="text-energy">100%</span>
+                        <label for="bar-energy">Energía:</label>
+                        <progress id="bar-energy" value="100" max="100" aria-label="Nivel de energía"></progress>
+                        <span id="text-energy" aria-live="polite">100%</span>
                     </div>
                     <div class="stat-row">
-                        <label>Salud:</label>
-                        <progress id="bar-health" value="100" max="100"></progress>
-                        <span id="text-health">100%</span>
+                        <label for="bar-health">Salud:</label>
+                        <progress id="bar-health" value="100" max="100" aria-label="Nivel de salud"></progress>
+                        <span id="text-health" aria-live="polite">100%</span>
                     </div>
                     <div class="stat-row">
-                        <label>Disciplina:</label>
-                        <progress id="bar-discipline" value="50" max="100"></progress>
-                        <span id="text-discipline">50%</span>
+                        <label for="bar-discipline">Disciplina:</label>
+                        <progress id="bar-discipline" value="50" max="100" aria-label="Nivel de disciplina"></progress>
+                        <span id="text-discipline" aria-live="polite">50%</span>
                     </div>
                 </div>
-                <div class="debug-info">
-                    <p>Edad: <span id="age-display">0</span> días</p>
-                    <p>Peso: <span id="weight-display">20</span> kg</p>
+                <div class="debug-info" aria-label="Información adicional">
+                    <p>Edad: <span id="age-display" aria-live="polite">0</span> días</p>
+                    <p>Peso: <span id="weight-display" aria-live="polite">20</span> kg</p>
                 </div>
             </div>
 
             <!-- Pestaña Tienda -->
-            <div id="tab-shop" class="tab-panel hidden" role="tabpanel">
+            <div id="tab-shop" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-btn-shop" tabindex="0">
                 <h2>Tienda de Items</h2>
-                <div class="currency-display">Monedas: <span id="coin-balance">0</span> 🪙</div>
-                <div id="shop-items" class="shop-grid">
+                <div class="currency-display" aria-live="polite" aria-atomic="true">Monedas: <span id="coin-balance">0</span> 🪙</div>
+                <div id="shop-items" class="shop-grid" role="list" aria-label="Items disponibles en la tienda">
                     <!-- Items generados por JS -->
                 </div>
                 <h2>Mis Skins</h2>
-                <div id="my-skins" class="shop-grid">
+                <div id="my-skins" class="shop-grid" role="list" aria-label="Skins compradas">
                     <!-- Skins compradas -->
                 </div>
             </div>
 
             <!-- Pestaña Logros -->
-            <div id="tab-achievements" class="tab-panel hidden" role="tabpanel">
+            <div id="tab-achievements" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-btn-achievements" tabindex="0">
                 <h2>Logros Desbloqueados</h2>
-                <div id="achievements-grid" class="achievements-grid">
+                <div id="achievements-grid" class="achievements-grid" role="list" aria-label="Lista de logros">
                     <!-- Logros generados por JS -->
-                </div>
-            </div>
-            
-            <!-- Pestaña Home (Vuelve a mostrar controles si es necesario en mobile) -->
-            <div id="tab-home" class="tab-panel active" role="tabpanel">
-                <div class="home-message">
-                    <p>¡Cuida bien de tu Dino!</p>
                 </div>
             </div>
         </main>
         
         <!-- Notificaciones Toast -->
-        <div id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+        <div id="toast-container" aria-live="assertive" aria-atomic="true" role="status"></div>
         
         <!-- Overlay de Celebración (Partículas) -->
         <div id="celebration-overlay" class="celebration-overlay hidden" aria-hidden="true"></div>
+        
+        <!-- Región para anuncios dinámicos -->
+        <div id="announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+        
+        <!-- Notificación flotante accesible -->
+        <div id="notification" class="notification" role="alert" aria-live="assertive" aria-atomic="true" hidden>
+            <span class="notif-icon" aria-hidden="true"></span>
+            <span class="notif-text"></span>
+        </div>
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
 </body>
 </html>

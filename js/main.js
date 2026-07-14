@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ============================================
-    // FUNCIÓN GLOBAL DE NOTIFICACIÓN
+    // FUNCIÓN GLOBAL DE NOTIFICACIÓN ACCESIBLE
     // ============================================
     window.showNotification = function(icon, text, duration = 3000) {
         const notif = elements.notification;
@@ -99,12 +99,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (iconEl) iconEl.textContent = icon;
         if (textEl) textEl.textContent = text;
         
+        // Hacer visible la notificación
+        notif.hidden = false;
         notif.classList.add('show');
         notif.setAttribute('role', 'alert');
+        notif.setAttribute('aria-live', 'assertive');
+        
+        // Anunciar cambio para lectores de pantalla
+        const announcer = document.getElementById('announcer');
+        if (announcer) {
+            announcer.textContent = `${icon} ${text}`;
+        }
         
         clearTimeout(notif._timeout);
         notif._timeout = setTimeout(() => {
             notif.classList.remove('show');
+            notif.hidden = true;
+            if (announcer) {
+                announcer.textContent = '';
+            }
         }, duration);
     };
 
@@ -874,7 +887,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Pestañas
+    // Pestañas - Navegación accesible con teclado
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const tab = btn.dataset.tab;
@@ -887,13 +900,24 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
             btn.setAttribute('tabindex', '0');
+            btn.focus();
             
             document.querySelectorAll('.tab-panel').forEach(p => {
                 p.classList.remove('active');
+                p.hidden = true;
             });
             const panel = document.getElementById(`tab-${tab}`);
             if (panel) {
                 panel.classList.add('active');
+                panel.hidden = false;
+                // Mover foco al panel para lectores de pantalla
+                panel.focus();
+            }
+            
+            // Anunciar cambio de pestaña
+            const announcer = document.getElementById('announcer');
+            if (announcer) {
+                announcer.textContent = `Pestaña ${btn.textContent.trim()} activada`;
             }
             
             if (typeof audio !== 'undefined' && audio.playButtonClick) audio.playButtonClick();
@@ -901,7 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         btn.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
-                // No prevenir
+                // No prevenir default en touch
             }
         }, { passive: true });
         
@@ -912,14 +936,28 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                 e.preventDefault();
                 const next = tabs[(currentIndex + 1) % tabs.length];
-                if (next) next.click();
+                if (next) {
+                    next.click();
+                    next.focus();
+                }
             } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 const prev = tabs[(currentIndex - 1 + tabs.length) % tabs.length];
-                if (prev) prev.click();
+                if (prev) {
+                    prev.click();
+                    prev.focus();
+                }
             } else if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 btn.click();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                tabs[0].click();
+                tabs[0].focus();
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                tabs[tabs.length - 1].click();
+                tabs[tabs.length - 1].focus();
             }
         });
     });
