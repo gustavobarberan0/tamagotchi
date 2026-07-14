@@ -45,41 +45,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================================
-    // ELEMENTOS DEL DOM
+    // ELEMENTOS DEL DOM - IDs actualizados
     // ============================================
     const elements = {
-        hunger: document.getElementById('hunger'),
-        energy: document.getElementById('energy'),
-        happiness: document.getElementById('happiness'),
-        age: document.getElementById('age'),
-        weight: document.getElementById('weight'),
-        generation: document.getElementById('generation'),
-        discipline: document.getElementById('discipline'),
-        coins: document.getElementById('coins'),
-        coinsDisplay: document.getElementById('coinsDisplay'),
-        petName: document.getElementById('petName'),
-        petStage: document.getElementById('petStage'),
+        hunger: document.getElementById('val-hunger'),
+        energy: document.getElementById('val-energy'),
+        happiness: document.getElementById('val-happiness'),
+        age: document.getElementById('age-display'),
+        weight: document.getElementById('weight-display'),
+        generation: document.getElementById('generation-display') || document.createElement('span'),
+        discipline: document.getElementById('text-discipline'),
+        coins: document.getElementById('coin-balance'),
+        coinsDisplay: document.getElementById('coin-balance'),
+        petName: document.getElementById('pet-name'),
+        petStage: document.getElementById('level-badge'),
         petBody: document.getElementById('petBody'),
         petMouth: document.getElementById('petMouth'),
         petBlush: document.getElementById('petBlush'),
-        messageArea: document.getElementById('messageArea'),
-        messageIcon: document.querySelector('.message-icon'),
-        messageText: document.querySelector('.message-text'),
-        resetBtn: document.getElementById('resetBtn'),
-        saveBtn: document.getElementById('saveBtn'),
-        soundToggle: document.getElementById('soundToggle'),
-        themeToggle: document.getElementById('themeToggle'),
-        exportBtn: document.getElementById('exportBtn'),
-        importBtn: document.getElementById('importBtn'),
-        ledIndicator: document.getElementById('ledIndicator'),
-        hungerFill: document.getElementById('hungerFill'),
-        energyFill: document.getElementById('energyFill'),
-        happinessFill: document.getElementById('happinessFill'),
-        friendshipFill: document.getElementById('friendshipFill'),
-        friendshipLevel: document.getElementById('friendshipLevel'),
+        messageArea: document.getElementById('announcer'),
+        messageIcon: null,
+        messageText: null,
+        resetBtn: null,
+        saveBtn: null,
+        soundToggle: null,
+        themeToggle: null,
+        exportBtn: null,
+        importBtn: null,
+        ledIndicator: null,
+        hungerFill: document.getElementById('bar-hunger'),
+        energyFill: document.getElementById('bar-energy'),
+        happinessFill: document.getElementById('bar-happiness'),
+        friendshipFill: document.getElementById('bar-health'),
+        friendshipLevel: document.getElementById('text-health'),
         leftEye: document.getElementById('leftEye'),
         rightEye: document.getElementById('rightEye'),
-        achievementsGrid: document.getElementById('achievementsGrid'),
+        achievementsGrid: document.getElementById('achievements-grid'),
         notification: document.getElementById('notification')
     };
 
@@ -132,43 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================================
-    // FUNCIONES DE MENSAJE
+    // FUNCIONES DE MENSAJE - Simplificadas para nueva UI
     // ============================================
     
     function showMessage(text, icon = null) {
-        if (!elements.messageIcon || !elements.messageText) return;
-        
-        if (icon) {
-            elements.messageIcon.textContent = icon;
+        // Usar el announcer para lectores de pantalla
+        const announcer = document.getElementById('announcer');
+        if (announcer) {
+            announcer.textContent = `${icon || ''} ${text}`;
         }
-        elements.messageText.textContent = text;
         
-        clearTimeout(messageTimeout);
-        messageTimeout = setTimeout(() => {
-            if (tamagotchi) {
-                try {
-                    const state = tamagotchi.getState();
-                    if (state.isAlive) {
-                        const messages = [
-                            ['¿Cómo estás hoy?', '😊'],
-                            ['¡Cuida de mí!', '❤️'],
-                            ['¡Me encanta jugar contigo!', '🎮'],
-                            ['¿Tienes algo de comer?', '🍖'],
-                            ['¡Estoy feliz!', '😄'],
-                            ['¡Dame cariño!', '🤗']
-                        ];
-                        const random = messages[Math.floor(Math.random() * messages.length)];
-                        elements.messageIcon.textContent = random[1];
-                        elements.messageText.textContent = random[0];
-                    } else {
-                        elements.messageIcon.textContent = '💀';
-                        elements.messageText.textContent = 'Descansa en paz...';
-                    }
-                } catch (e) {
-                    // Silenciar errores
-                }
-            }
-        }, 4000);
+        // También mostrar en la notificación toast
+        if (icon && text) {
+            window.showNotification(icon, text, 4000);
+        }
     }
 
     // ============================================
@@ -217,7 +194,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateProgressBar(element, value) {
-        if (element) {
+        if (element && element.tagName === 'PROGRESS') {
+            const rounded = Math.round(Math.min(100, Math.max(0, value)));
+            element.value = rounded;
+            element.setAttribute('aria-valuenow', rounded);
+        } else if (element) {
             const rounded = Math.round(Math.min(100, Math.max(0, value)));
             element.style.setProperty('--progress', `${rounded}%`);
             element.style.width = `${rounded}%`;
@@ -382,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgressBar(elements.friendshipFill, Math.min(100, state.friendship || 0));
 
             if (elements.petName) elements.petName.textContent = state.name;
-            if (elements.petStage) elements.petStage.textContent = `${state.emoji || '🐣'} ${state.evolutionName || 'Bebé'}`;
+            if (elements.petStage) elements.petStage.textContent = `Nivel ${state.level || 1}`;
 
             if (elements.friendshipLevel) {
                 const friendship = state.friendship || 0;
