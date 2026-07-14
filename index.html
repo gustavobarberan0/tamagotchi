@@ -77,6 +77,7 @@
                         </div>
                         <div class="pet-name" id="petName" aria-live="polite">Dino</div>
                         <div class="pet-stage" id="petStage" aria-live="polite">🦕 Bebé</div>
+                        <div class="sleep-remaining" id="sleepRemaining" aria-live="polite" style="display: none;"></div>
                         <div class="pet-friendship" role="group" aria-label="Nivel de amistad">
                             <span aria-hidden="true">Amistad: </span>
                             <div class="friendship-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Nivel de amistad">
@@ -123,9 +124,14 @@
                                 <span class="btn-cooldown" id="playCooldown" aria-hidden="true"></span>
                             </button>
                             <button class="action-btn" data-action="sleep" aria-label="Poner a dormir a la mascota">
-                                <span class="btn-icon" aria-hidden="true">💤</span>
+                                <span class="btn-icon" aria-hidden="true">😴</span>
                                 <span class="btn-text">Dormir</span>
                                 <span class="btn-cooldown" id="sleepCooldown" aria-hidden="true"></span>
+                            </button>
+                            <button class="action-btn" data-action="wake" aria-label="Despertar a la mascota">
+                                <span class="btn-icon" aria-hidden="true">☀️</span>
+                                <span class="btn-text">Despertar</span>
+                                <span class="btn-cooldown" id="wakeCooldown" aria-hidden="true"></span>
                             </button>
                             <button class="action-btn" data-action="clean" aria-label="Limpiar a la mascota">
                                 <span class="btn-icon" aria-hidden="true">🧹</span>

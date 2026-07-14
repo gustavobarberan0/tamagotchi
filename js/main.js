@@ -514,6 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showMessage(`🌟 ¡Evolucionó a ${tamagotchi.evolutionName}!`, '🌟');
                     if (typeof particleSystem !== 'undefined' && particleSystem && particleSystem.celebration) {
                         particleSystem.celebration();
+                        particleSystem.clearAfter(3000);
                     }
                 }
                 
@@ -536,12 +537,33 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (typeof audio !== 'undefined' && audio.playWarning) audio.playWarning();
                         showMessage('😴 Está muy cansado... ponlo a dormir', '😴');
                     }
+                    
+                    // Mostrar tiempo restante para despertar si está durmiendo
+                    if (state.isSleeping && state.sleepTime) {
+                        const sleepRemaining = tamagotchi.getSleepRemaining();
+                        if (sleepRemaining !== null && sleepRemaining > 0) {
+                            const formattedTime = tamagotchi.formatSleepTime(sleepRemaining);
+                            
+                            if (elements.messageArea) {
+                                const messageIcon = elements.messageArea.querySelector('.message-icon');
+                                const messageText = elements.messageArea.querySelector('.message-text');
+                                if (messageIcon && messageText) {
+                                    messageIcon.textContent = '⏰';
+                                    messageText.textContent = `Despierta en ${formattedTime}`;
+                                }
+                            }
+                        }
+                    }
                 }
                 
                 if (typeof achievementSystem !== 'undefined' && achievementSystem) {
                     const newAchievements = achievementSystem.checkAchievements();
                     if (newAchievements && newAchievements.length > 0 && elements.achievementsGrid) {
                         achievementSystem.renderAchievements(elements.achievementsGrid);
+                        // Limpiar partículas de celebración después de 3 segundos
+                        if (typeof particleSystem !== 'undefined' && particleSystem) {
+                            particleSystem.clearAfter(3000);
+                        }
                     }
                 }
                 
@@ -583,6 +605,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 case 'sleep':
                     result = tamagotchi.sleep();
+                    if (result.success && typeof audio !== 'undefined' && audio.playSleep) audio.playSleep();
+                    break;
+                case 'wake':
+                    result = tamagotchi.wakeUp();
                     if (result.success && typeof audio !== 'undefined' && audio.playSleep) audio.playSleep();
                     break;
                 case 'clean':
