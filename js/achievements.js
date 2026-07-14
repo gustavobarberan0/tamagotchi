@@ -403,8 +403,6 @@ class AchievementSystem {
         // Efectos visuales
         if (typeof particleSystem !== 'undefined' && particleSystem && particleSystem.celebration) {
             particleSystem.celebration();
-            // Limpiar partículas después de 3 segundos para que no se queden permanentemente
-            particleSystem.clearAfter(3000);
         }
         
         if (audio && audio.playEvolution) {
@@ -417,10 +415,6 @@ class AchievementSystem {
             if (modal.classList.contains('active')) {
                 modal.classList.remove('active');
                 modal.setAttribute('aria-hidden', 'true');
-            }
-            // Asegurar que las partículas se limpien al cerrar el modal
-            if (typeof particleSystem !== 'undefined' && particleSystem) {
-                particleSystem.clear();
             }
         }, 5000);
     }

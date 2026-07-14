@@ -42,10 +42,9 @@ class Tamagotchi {
             energy: 0,
             skin: 0
         };
-        this.skinColor = '#7fc97f';
-        this.skinSecondary = '#4a8f4a';
+        this.skinColor = '#ff6b6b';
+        this.skinSecondary = '#c0392b';
         this.theme = 'dark';
-        this.sleepTime = null; // Para rastrear cuándo empezó a dormir
     }
 
     // ============================================
@@ -99,56 +98,20 @@ class Tamagotchi {
 
     sleep() {
         if (!this.isAlive) return { message: '💀 Ya no está con nosotros...', success: false };
-        if (this.actionCooldowns.sleep > 0 && !this.isSleeping) return { message: `⏳ Espera ${Math.ceil(this.actionCooldowns.sleep)}s`, success: false };
+        if (this.actionCooldowns.sleep > 0) return { message: `⏳ Espera ${Math.ceil(this.actionCooldowns.sleep)}s`, success: false };
         
         if (this.isSleeping) {
-            // Verificar si ya pasó el tiempo mínimo para despertar
-            const sleepRemaining = this.getSleepRemaining();
-            if (sleepRemaining !== null && sleepRemaining > 0) {
-                return { message: `😴 Aún duerme. Faltan ${this.formatSleepTime(sleepRemaining)}`, success: false };
-            }
             this.isSleeping = false;
             this.energy = Math.min(100, this.energy + 40);
             this.updateMood();
             this.setCooldown('sleep', 30);
-            this.sleepTime = null; // Limpiar tiempo de sueño al despertar
             return { message: '🌅 ¡Buenos días! +40 energía', success: true };
         }
         
         this.isSleeping = true;
-        this.sleepTime = Date.now(); // Guardar cuándo empezó a dormir
         this.energy = Math.min(100, this.energy + 10);
         this.setCooldown('sleep', 60);
         return { message: '😴 Zzz... durmiendo profundamente', success: true };
-    }
-
-    /**
-     * Despierta a la mascota (alias para sleep cuando está durmiendo)
-     */
-    wakeUp() {
-        return this.sleep();
-    }
-
-    /**
-     * Obtiene el tiempo restante para despertar (en segundos)
-     */
-    getSleepRemaining() {
-        if (!this.isSleeping || !this.sleepTime) return null;
-        const sleepDuration = 60000; // 60 segundos
-        const elapsed = Date.now() - this.sleepTime;
-        const remaining = Math.max(0, Math.ceil((sleepDuration - elapsed) / 1000));
-        return remaining;
-    }
-
-    /**
-     * Formatea el tiempo restante para mostrarlo
-     */
-    formatSleepTime(seconds) {
-        if (seconds === null) return '';
-        if (seconds < 60) return `${seconds}s`;
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}m ${secs}s`;
     }
 
     clean() {
@@ -228,29 +191,11 @@ class Tamagotchi {
             return { message: '❌ No tienes suficientes monedas', success: false };
         }
 
-        if (!this.inventory) {
-            this.inventory = { food: 0, toy: 0, energy: 0, skin: 0 };
-        }
-
         this.coins -= prices[item];
         this.inventory[item] = (this.inventory[item] || 0) + 1;
         this.itemsPurchased = (this.itemsPurchased || 0) + 1;
 
-        if (item === 'skin') {
-            // Aplicar skin inmediatamente - cambiar colores aleatoriamente
-            const skins = [
-                { primary: '#ff6b6b', secondary: '#c0392b' }, // Rojo
-                { primary: '#4d96ff', secondary: '#2b5797' }, // Azul
-                { primary: '#ffd93d', secondary: '#f39c12' }, // Amarillo
-                { primary: '#6bcb77', secondary: '#27ae60' }, // Verde
-                { primary: '#f093fb', secondary: '#8e44ad' }, // Morado
-                { primary: '#ff9ff3', secondary: '#e84393' }, // Rosa
-                { primary: '#a29bfe', secondary: '#6c5ce7' }  // Lavanda
-            ];
-            const randomSkin = skins[Math.floor(Math.random() * skins.length)];
-            this.skinColor = randomSkin.primary;
-            this.skinSecondary = randomSkin.secondary;
-        } else {
+        if (item !== 'skin') {
             switch(item) {
                 case 'food':
                     this.hunger = Math.min(100, this.hunger + 30);
@@ -267,7 +212,7 @@ class Tamagotchi {
         }
 
         return { 
-            message: item === 'skin' ? '✅ ¡Skin aplicada!' : `✅ ¡Artículo comprado!`, 
+            message: `✅ ¡Comprado! ${item}`, 
             success: true,
             item: item
         };
@@ -363,16 +308,16 @@ class Tamagotchi {
         
         if (this.age >= 70) {
             this.evolutionStage = 4;
-            this.evolutionName = 'Rey Dino';
+            this.evolutionName = 'Anciano';
         } else if (this.age >= 40) {
             this.evolutionStage = 3;
-            this.evolutionName = 'T-Rex';
+            this.evolutionName = 'Adulto';
         } else if (this.age >= 20) {
             this.evolutionStage = 2;
-            this.evolutionName = 'Raptor';
+            this.evolutionName = 'Adolescente';
         } else if (this.age >= 10) {
             this.evolutionStage = 1;
-            this.evolutionName = 'Dino Joven';
+            this.evolutionName = 'Niño';
         } else {
             this.evolutionStage = 0;
             this.evolutionName = 'Bebé';
@@ -407,12 +352,11 @@ class Tamagotchi {
     // ============================================
     
     getEmoji() {
-        if (!this.isAlive) return '🦴';
+        if (!this.isAlive) return '💀';
         if (this.isSleeping) return '😴';
         if (this.sick) return '🤒';
         
-        // Emojis de dinosaurio para las etapas de evolución
-        const stages = ['🦕', '🐉', '🦖', '🦎', '🐲'];
+        const stages = ['🐣', '🐥', '🐦', '🐔', '🦉'];
         let emoji = stages[Math.min(this.evolutionStage, stages.length - 1)];
         
         if (this.poopCount > 0) emoji = '💩' + emoji;
@@ -452,8 +396,7 @@ class Tamagotchi {
             lastUpdate: this.lastUpdate,
             birthTime: this.birthTime,
             skinColor: this.skinColor,
-            skinSecondary: this.skinSecondary,
-            sleepTime: this.sleepTime
+            skinSecondary: this.skinSecondary
         };
     }
 

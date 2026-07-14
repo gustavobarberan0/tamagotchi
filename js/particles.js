@@ -141,15 +141,6 @@ class ParticleSystem {
     }
 
     /**
-     * Limpia partículas después de un tiempo determinado
-     */
-    clearAfter(delayMs) {
-        setTimeout(() => {
-            this.clear();
-        }, delayMs);
-    }
-
-    /**
      * Tipos de partículas predefinidos
      */
     celebration() {

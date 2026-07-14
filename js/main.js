@@ -45,46 +45,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================================
-    // ELEMENTOS DEL DOM - IDs actualizados
+    // ELEMENTOS DEL DOM
     // ============================================
     const elements = {
-        hunger: document.getElementById('val-hunger'),
-        energy: document.getElementById('val-energy'),
-        happiness: document.getElementById('val-happiness'),
-        age: document.getElementById('age-display'),
-        weight: document.getElementById('weight-display'),
-        generation: document.getElementById('generation-display') || document.createElement('span'),
-        discipline: document.getElementById('text-discipline'),
-        coins: document.getElementById('coin-balance'),
-        coinsDisplay: document.getElementById('coin-balance'),
-        petName: document.getElementById('pet-name'),
-        petStage: document.getElementById('level-badge'),
+        hunger: document.getElementById('hunger'),
+        energy: document.getElementById('energy'),
+        happiness: document.getElementById('happiness'),
+        age: document.getElementById('age'),
+        weight: document.getElementById('weight'),
+        generation: document.getElementById('generation'),
+        discipline: document.getElementById('discipline'),
+        coins: document.getElementById('coins'),
+        coinsDisplay: document.getElementById('coinsDisplay'),
+        petName: document.getElementById('petName'),
+        petStage: document.getElementById('petStage'),
         petBody: document.getElementById('petBody'),
         petMouth: document.getElementById('petMouth'),
         petBlush: document.getElementById('petBlush'),
-        messageArea: document.getElementById('announcer'),
-        messageIcon: null,
-        messageText: null,
-        resetBtn: null,
-        saveBtn: null,
-        soundToggle: null,
-        themeToggle: null,
-        exportBtn: null,
-        importBtn: null,
-        ledIndicator: null,
-        hungerFill: document.getElementById('bar-hunger'),
-        energyFill: document.getElementById('bar-energy'),
-        happinessFill: document.getElementById('bar-happiness'),
-        friendshipFill: document.getElementById('bar-health'),
-        friendshipLevel: document.getElementById('text-health'),
+        messageArea: document.getElementById('messageArea'),
+        messageIcon: document.querySelector('.message-icon'),
+        messageText: document.querySelector('.message-text'),
+        resetBtn: document.getElementById('resetBtn'),
+        saveBtn: document.getElementById('saveBtn'),
+        soundToggle: document.getElementById('soundToggle'),
+        themeToggle: document.getElementById('themeToggle'),
+        exportBtn: document.getElementById('exportBtn'),
+        importBtn: document.getElementById('importBtn'),
+        ledIndicator: document.getElementById('ledIndicator'),
+        hungerFill: document.getElementById('hungerFill'),
+        energyFill: document.getElementById('energyFill'),
+        happinessFill: document.getElementById('happinessFill'),
+        friendshipFill: document.getElementById('friendshipFill'),
+        friendshipLevel: document.getElementById('friendshipLevel'),
         leftEye: document.getElementById('leftEye'),
         rightEye: document.getElementById('rightEye'),
-        achievementsGrid: document.getElementById('achievements-grid'),
+        achievementsGrid: document.getElementById('achievementsGrid'),
         notification: document.getElementById('notification')
     };
 
     // ============================================
-    // FUNCIÓN GLOBAL DE NOTIFICACIÓN ACCESIBLE
+    // FUNCIÓN GLOBAL DE NOTIFICACIÓN
     // ============================================
     window.showNotification = function(icon, text, duration = 3000) {
         const notif = elements.notification;
@@ -99,25 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (iconEl) iconEl.textContent = icon;
         if (textEl) textEl.textContent = text;
         
-        // Hacer visible la notificación
-        notif.hidden = false;
         notif.classList.add('show');
         notif.setAttribute('role', 'alert');
-        notif.setAttribute('aria-live', 'assertive');
-        
-        // Anunciar cambio para lectores de pantalla
-        const announcer = document.getElementById('announcer');
-        if (announcer) {
-            announcer.textContent = `${icon} ${text}`;
-        }
         
         clearTimeout(notif._timeout);
         notif._timeout = setTimeout(() => {
             notif.classList.remove('show');
-            notif.hidden = true;
-            if (announcer) {
-                announcer.textContent = '';
-            }
         }, duration);
     };
 
@@ -132,20 +119,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================================
-    // FUNCIONES DE MENSAJE - Simplificadas para nueva UI
+    // FUNCIONES DE MENSAJE
     // ============================================
     
     function showMessage(text, icon = null) {
-        // Usar el announcer para lectores de pantalla
-        const announcer = document.getElementById('announcer');
-        if (announcer) {
-            announcer.textContent = `${icon || ''} ${text}`;
-        }
+        if (!elements.messageIcon || !elements.messageText) return;
         
-        // También mostrar en la notificación toast
-        if (icon && text) {
-            window.showNotification(icon, text, 4000);
+        if (icon) {
+            elements.messageIcon.textContent = icon;
         }
+        elements.messageText.textContent = text;
+        
+        clearTimeout(messageTimeout);
+        messageTimeout = setTimeout(() => {
+            if (tamagotchi) {
+                try {
+                    const state = tamagotchi.getState();
+                    if (state.isAlive) {
+                        const messages = [
+                            ['¿Cómo estás hoy?', '😊'],
+                            ['¡Cuida de mí!', '❤️'],
+                            ['¡Me encanta jugar contigo!', '🎮'],
+                            ['¿Tienes algo de comer?', '🍖'],
+                            ['¡Estoy feliz!', '😄'],
+                            ['¡Dame cariño!', '🤗']
+                        ];
+                        const random = messages[Math.floor(Math.random() * messages.length)];
+                        elements.messageIcon.textContent = random[1];
+                        elements.messageText.textContent = random[0];
+                    } else {
+                        elements.messageIcon.textContent = '💀';
+                        elements.messageText.textContent = 'Descansa en paz...';
+                    }
+                } catch (e) {
+                    // Silenciar errores
+                }
+            }
+        }, 4000);
     }
 
     // ============================================
@@ -194,11 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateProgressBar(element, value) {
-        if (element && element.tagName === 'PROGRESS') {
-            const rounded = Math.round(Math.min(100, Math.max(0, value)));
-            element.value = rounded;
-            element.setAttribute('aria-valuenow', rounded);
-        } else if (element) {
+        if (element) {
             const rounded = Math.round(Math.min(100, Math.max(0, value)));
             element.style.setProperty('--progress', `${rounded}%`);
             element.style.width = `${rounded}%`;
@@ -363,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgressBar(elements.friendshipFill, Math.min(100, state.friendship || 0));
 
             if (elements.petName) elements.petName.textContent = state.name;
-            if (elements.petStage) elements.petStage.textContent = `Nivel ${state.level || 1}`;
+            if (elements.petStage) elements.petStage.textContent = `${state.emoji || '🐣'} ${state.evolutionName || 'Bebé'}`;
 
             if (elements.friendshipLevel) {
                 const friendship = state.friendship || 0;
@@ -508,7 +514,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     showMessage(`🌟 ¡Evolucionó a ${tamagotchi.evolutionName}!`, '🌟');
                     if (typeof particleSystem !== 'undefined' && particleSystem && particleSystem.celebration) {
                         particleSystem.celebration();
-                        particleSystem.clearAfter(3000);
                     }
                 }
                 
@@ -531,33 +536,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (typeof audio !== 'undefined' && audio.playWarning) audio.playWarning();
                         showMessage('😴 Está muy cansado... ponlo a dormir', '😴');
                     }
-                    
-                    // Mostrar tiempo restante para despertar si está durmiendo
-                    if (state.isSleeping && state.sleepTime) {
-                        const sleepRemaining = tamagotchi.getSleepRemaining();
-                        if (sleepRemaining !== null && sleepRemaining > 0) {
-                            const formattedTime = tamagotchi.formatSleepTime(sleepRemaining);
-                            
-                            if (elements.messageArea) {
-                                const messageIcon = elements.messageArea.querySelector('.message-icon');
-                                const messageText = elements.messageArea.querySelector('.message-text');
-                                if (messageIcon && messageText) {
-                                    messageIcon.textContent = '⏰';
-                                    messageText.textContent = `Despierta en ${formattedTime}`;
-                                }
-                            }
-                        }
-                    }
                 }
                 
                 if (typeof achievementSystem !== 'undefined' && achievementSystem) {
                     const newAchievements = achievementSystem.checkAchievements();
                     if (newAchievements && newAchievements.length > 0 && elements.achievementsGrid) {
                         achievementSystem.renderAchievements(elements.achievementsGrid);
-                        // Limpiar partículas de celebración después de 3 segundos
-                        if (typeof particleSystem !== 'undefined' && particleSystem) {
-                            particleSystem.clearAfter(3000);
-                        }
                     }
                 }
                 
@@ -599,10 +583,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 case 'sleep':
                     result = tamagotchi.sleep();
-                    if (result.success && typeof audio !== 'undefined' && audio.playSleep) audio.playSleep();
-                    break;
-                case 'wake':
-                    result = tamagotchi.wakeUp();
                     if (result.success && typeof audio !== 'undefined' && audio.playSleep) audio.playSleep();
                     break;
                 case 'clean':
@@ -868,7 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Pestañas - Navegación accesible con teclado
+    // Pestañas
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const tab = btn.dataset.tab;
@@ -881,24 +861,13 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
             btn.setAttribute('tabindex', '0');
-            btn.focus();
             
             document.querySelectorAll('.tab-panel').forEach(p => {
                 p.classList.remove('active');
-                p.hidden = true;
             });
             const panel = document.getElementById(`tab-${tab}`);
             if (panel) {
                 panel.classList.add('active');
-                panel.hidden = false;
-                // Mover foco al panel para lectores de pantalla
-                panel.focus();
-            }
-            
-            // Anunciar cambio de pestaña
-            const announcer = document.getElementById('announcer');
-            if (announcer) {
-                announcer.textContent = `Pestaña ${btn.textContent.trim()} activada`;
             }
             
             if (typeof audio !== 'undefined' && audio.playButtonClick) audio.playButtonClick();
@@ -906,7 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         btn.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
-                // No prevenir default en touch
+                // No prevenir
             }
         }, { passive: true });
         
@@ -917,28 +886,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                 e.preventDefault();
                 const next = tabs[(currentIndex + 1) % tabs.length];
-                if (next) {
-                    next.click();
-                    next.focus();
-                }
+                if (next) next.click();
             } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 const prev = tabs[(currentIndex - 1 + tabs.length) % tabs.length];
-                if (prev) {
-                    prev.click();
-                    prev.focus();
-                }
+                if (prev) prev.click();
             } else if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 btn.click();
-            } else if (e.key === 'Home') {
-                e.preventDefault();
-                tabs[0].click();
-                tabs[0].focus();
-            } else if (e.key === 'End') {
-                e.preventDefault();
-                tabs[tabs.length - 1].click();
-                tabs[tabs.length - 1].focus();
             }
         });
     });
