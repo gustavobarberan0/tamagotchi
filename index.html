@@ -36,24 +36,28 @@
 
         <!-- Área Principal de la Mascota -->
         <section class="pet-area" aria-live="polite" aria-atomic="true" aria-label="Área de la mascota">
-            <div class="pet-sprite-container" role="img" aria-label="Mascota virtual dinosaurio">
-                <div id="pet-sprite" class="pet-sprite" aria-hidden="true">
-                    <!-- El sprite se dibuja vía CSS/JS -->
-                    <div class="eye left"></div>
-                    <div class="eye right"></div>
-                    <div class="mouth"></div>
-                </div>
-                <div id="sleep-indicator" class="overlay-indicator hidden" aria-hidden="true">
-                    💤
-                </div>
-                <div id="poop-indicator" class="overlay-indicator hidden" aria-label="Hay suciedad que limpiar">
-                    💩
+            <div class="pet" role="img" aria-label="Mascota virtual dinosaurio">
+                <div id="petBody" class="pet-body" aria-hidden="true">
+                    <div class="pet-eyes">
+                        <div id="leftEye" class="eye left"><span class="pupil"></span></div>
+                        <div id="rightEye" class="eye right"><span class="pupil"></span></div>
+                    </div>
+                    <div id="petMouth" class="pet-mouth"></div>
+                    <div id="petBlush" class="pet-blush"></div>
                 </div>
             </div>
             
             <!-- Mensaje de tiempo para dormir -->
             <div id="sleep-timer-display" class="sleep-timer hidden" role="status" aria-live="assertive" aria-atomic="true">
                 Despierta en: <span id="time-remaining">00:00</span>
+            </div>
+            
+            <!-- Indicadores overlay -->
+            <div id="sleep-indicator" class="overlay-indicator hidden" aria-hidden="true">
+                💤
+            </div>
+            <div id="poop-indicator" class="overlay-indicator hidden" aria-label="Hay suciedad que limpiar">
+                💩
             </div>
         </section>
 
@@ -178,6 +182,12 @@
         </div>
     </div>
 
+    <!-- Scripts del juego - orden de carga importante -->
+    <script src="js/tamagotchi.js" defer></script>
+    <script src="js/audio.js" defer></script>
+    <script src="js/particles.js" defer></script>
+    <script src="js/minigames.js" defer></script>
+    <script src="js/achievements.js" defer></script>
     <script src="js/main.js" defer></script>
 </body>
 </html>
