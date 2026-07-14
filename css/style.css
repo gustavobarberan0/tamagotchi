@@ -1460,6 +1460,56 @@ body::before {
 }
 
 /* ============================================
+   FOCUS VISIBLE MEJORADO - ACCESIBILIDAD
+   ============================================ */
+*:focus-visible {
+    outline: 3px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible {
+    outline: 3px solid var(--text-primary);
+    outline-offset: 3px;
+    box-shadow: var(--focus-ring);
+}
+
+a:focus-visible {
+    outline: 3px solid var(--text-primary);
+    outline-offset: 3px;
+}
+
+input:focus-visible,
+progress:focus-visible {
+    outline: 3px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   MEJORAS DE CONTRASTE PARA TEXTO
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+label {
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+/* Asegurar mínimo contraste en botones deshabilitados */
+button:disabled,
+[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
    PANTALLAS MUY PEQUEÑAS (<= 320px)
    ============================================ */
 @media (max-width: 320px) {
