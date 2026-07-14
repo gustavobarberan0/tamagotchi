@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Tamagotchi Ultimate - Mascota Virtual</title>
-    <meta name="description" content="Tamagotchi Virtual - Cuida de tu mascota digital con todas las mecánicas clásicas y modernas">
+    <title>Tamagotchi Dino - Mascota Virtual Retro</title>
+    <meta name="description" content="Tamagotchi Dino - Cuida de tu dinosaurio virtual con estilo retro y toque moderno">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a1a2e" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#f0f0f0" media="(prefers-color-scheme: light)">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐣</text></svg>">
+    <meta name="theme-color" content="#1a2f1a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#c7f0b8" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦕</text></svg>">
     <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Google Fonts - Press Start 2P para estilo pixel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
     <!-- Preload de recursos críticos -->
     <link rel="preload" href="css/style.css" as="style">
@@ -23,7 +28,7 @@
                 <div class="led-indicator" id="ledIndicator" role="status" aria-label="Estado del dispositivo">
                     <span class="sr-only">Dispositivo encendido</span>
                 </div>
-                <h1 class="title" aria-label="Tamagotchi">TAMAGOTCHI</h1>
+                <h1 class="title" aria-label="Tamagotchi">TAMAGOTCHI DINO</h1>
                 <div class="battery-indicator" aria-label="Batería" role="img">🔋</div>
             </header>
 
@@ -70,8 +75,8 @@
                                 <div class="particle-container" id="particleContainer" aria-hidden="true"></div>
                             </div>
                         </div>
-                        <div class="pet-name" id="petName" aria-live="polite">Tamagotchi</div>
-                        <div class="pet-stage" id="petStage" aria-live="polite">🐣 Bebé</div>
+                        <div class="pet-name" id="petName" aria-live="polite">Dino</div>
+                        <div class="pet-stage" id="petStage" aria-live="polite">🦕 Bebé</div>
                         <div class="pet-friendship" role="group" aria-label="Nivel de amistad">
                             <span aria-hidden="true">Amistad: </span>
                             <div class="friendship-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Nivel de amistad">
@@ -224,7 +229,7 @@
 
                 <!-- Mensaje -->
                 <div class="message-area" id="messageArea" role="status" aria-live="polite" aria-atomic="true">
-                    <span class="message-icon" aria-hidden="true">🐣</span>
+                    <span class="message-icon" aria-hidden="true">🦕</span>
                     <span class="message-text">¡Bienvenido a Tamagotchi Ultimate!</span>
                 </div>
 
