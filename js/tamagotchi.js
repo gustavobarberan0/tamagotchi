@@ -45,6 +45,7 @@ class Tamagotchi {
         this.skinColor = '#7fc97f';
         this.skinSecondary = '#4a8f4a';
         this.theme = 'dark';
+        this.sleepTime = null; // Para rastrear cuándo empezó a dormir
     }
 
     // ============================================
@@ -105,10 +106,12 @@ class Tamagotchi {
             this.energy = Math.min(100, this.energy + 40);
             this.updateMood();
             this.setCooldown('sleep', 30);
+            this.sleepTime = null; // Limpiar tiempo de sueño al despertar
             return { message: '🌅 ¡Buenos días! +40 energía', success: true };
         }
         
         this.isSleeping = true;
+        this.sleepTime = Date.now(); // Guardar cuándo empezó a dormir
         this.energy = Math.min(100, this.energy + 10);
         this.setCooldown('sleep', 60);
         return { message: '😴 Zzz... durmiendo profundamente', success: true };
@@ -191,11 +194,29 @@ class Tamagotchi {
             return { message: '❌ No tienes suficientes monedas', success: false };
         }
 
+        if (!this.inventory) {
+            this.inventory = { food: 0, toy: 0, energy: 0, skin: 0 };
+        }
+
         this.coins -= prices[item];
         this.inventory[item] = (this.inventory[item] || 0) + 1;
         this.itemsPurchased = (this.itemsPurchased || 0) + 1;
 
-        if (item !== 'skin') {
+        if (item === 'skin') {
+            // Aplicar skin inmediatamente - cambiar colores aleatoriamente
+            const skins = [
+                { primary: '#ff6b6b', secondary: '#c0392b' }, // Rojo
+                { primary: '#4d96ff', secondary: '#2b5797' }, // Azul
+                { primary: '#ffd93d', secondary: '#f39c12' }, // Amarillo
+                { primary: '#6bcb77', secondary: '#27ae60' }, // Verde
+                { primary: '#f093fb', secondary: '#8e44ad' }, // Morado
+                { primary: '#ff9ff3', secondary: '#e84393' }, // Rosa
+                { primary: '#a29bfe', secondary: '#6c5ce7' }  // Lavanda
+            ];
+            const randomSkin = skins[Math.floor(Math.random() * skins.length)];
+            this.skinColor = randomSkin.primary;
+            this.skinSecondary = randomSkin.secondary;
+        } else {
             switch(item) {
                 case 'food':
                     this.hunger = Math.min(100, this.hunger + 30);
@@ -212,7 +233,7 @@ class Tamagotchi {
         }
 
         return { 
-            message: `✅ ¡Comprado! ${item}`, 
+            message: item === 'skin' ? '✅ ¡Skin aplicada!' : `✅ ¡Artículo comprado!`, 
             success: true,
             item: item
         };
@@ -397,7 +418,8 @@ class Tamagotchi {
             lastUpdate: this.lastUpdate,
             birthTime: this.birthTime,
             skinColor: this.skinColor,
-            skinSecondary: this.skinSecondary
+            skinSecondary: this.skinSecondary,
+            sleepTime: this.sleepTime
         };
     }
 
