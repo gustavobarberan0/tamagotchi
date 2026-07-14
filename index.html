@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Tamagotchi Ultimate - Mascota Virtual</title>
+    <meta name="description" content="Tamagotchi Virtual - Cuida de tu mascota digital con todas las mecánicas clásicas y modernas">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a2e" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f0f0f0" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐣</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Preload de recursos críticos -->
+    <link rel="preload" href="css/style.css" as="style">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <div class="container" role="main" id="main-content">
+        <div class="tamagotchi-shell" role="application" aria-label="Tamagotchi Virtual">
+            <header class="tamagotchi-header" role="banner">
+                <div class="led-indicator" id="ledIndicator" role="status" aria-label="Estado del dispositivo">
+                    <span class="sr-only">Dispositivo encendido</span>
+                </div>
+                <h1 class="title" aria-label="Tamagotchi">TAMAGOTCHI</h1>
+                <div class="battery-indicator" aria-label="Batería" role="img">🔋</div>
+            </header>
+
+            <section class="screen" aria-label="Pantalla principal">
+                <!-- Barra de estado -->
+                <div class="status-bar" role="group" aria-label="Estadísticas de la mascota">
+                    <div class="status-item" role="status" aria-live="polite">
+                        <span class="icon" aria-hidden="true">❤️</span>
+                        <span class="value" id="hunger" aria-label="Hambre: 100">100</span>
+                        <div class="status-bar-fill" id="hungerFill" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Nivel de hambre"></div>
+                    </div>
+                    <div class="status-item" role="status" aria-live="polite">
+                        <span class="icon" aria-hidden="true">⚡</span>
+                        <span class="value" id="energy" aria-label="Energía: 100">100</span>
+                        <div class="status-bar-fill" id="energyFill" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Nivel de energía"></div>
+                    </div>
+                    <div class="status-item" role="status" aria-live="polite">
+                        <span class="icon" aria-hidden="true">😊</span>
+                        <span class="value" id="happiness" aria-label="Felicidad: 100">100</span>
+                        <div class="status-bar-fill" id="happinessFill" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Nivel de felicidad"></div>
+                    </div>
+                    <div class="status-item">
+                        <span class="icon" aria-hidden="true">📈</span>
+                        <span class="value" id="age" aria-label="Edad: 0 años">0</span>
+                        <span class="sub-text" aria-hidden="true">años</span>
+                    </div>
+                </div>
+                
+                <!-- Mascota -->
+                <div class="pet-display" id="petDisplay" role="img" aria-label="Tu mascota Tamagotchi">
+                    <div class="pet-container">
+                        <div class="pet" id="petWrapper">
+                            <div class="pet-body" id="petBody" role="img" aria-label="Cuerpo de la mascota">
+                                <div class="pet-eyes">
+                                    <div class="eye left" id="leftEye" role="img" aria-label="Ojo izquierdo">
+                                        <div class="pupil"></div>
+                                    </div>
+                                    <div class="eye right" id="rightEye" role="img" aria-label="Ojo derecho">
+                                        <div class="pupil"></div>
+                                    </div>
+                                </div>
+                                <div class="pet-mouth" id="petMouth" role="img" aria-label="Boca"></div>
+                                <div class="pet-blush" id="petBlush" aria-hidden="true"></div>
+                                <div class="particle-container" id="particleContainer" aria-hidden="true"></div>
+                            </div>
+                        </div>
+                        <div class="pet-name" id="petName" aria-live="polite">Tamagotchi</div>
+                        <div class="pet-stage" id="petStage" aria-live="polite">🐣 Bebé</div>
+                        <div class="pet-friendship" role="group" aria-label="Nivel de amistad">
+                            <span aria-hidden="true">Amistad: </span>
+                            <div class="friendship-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Nivel de amistad">
+                                <div class="friendship-fill" id="friendshipFill"></div>
+                            </div>
+                            <span id="friendshipLevel" aria-live="polite">❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestañas -->
+                <div class="tab-buttons" role="tablist" aria-label="Navegación de pestañas">
+                    <button class="tab-btn active" data-tab="care" role="tab" aria-selected="true" aria-controls="tab-care" id="tab-care-btn" tabindex="0">
+                        <span aria-hidden="true">❤️</span>
+                        <span>Cuidado</span>
+                    </button>
+                    <button class="tab-btn" data-tab="games" role="tab" aria-selected="false" aria-controls="tab-games" id="tab-games-btn" tabindex="-1">
+                        <span aria-hidden="true">🎮</span>
+                        <span>Juegos</span>
+                    </button>
+                    <button class="tab-btn" data-tab="shop" role="tab" aria-selected="false" aria-controls="tab-shop" id="tab-shop-btn" tabindex="-1">
+                        <span aria-hidden="true">🛒</span>
+                        <span>Tienda</span>
+                    </button>
+                    <button class="tab-btn" data-tab="achievements" role="tab" aria-selected="false" aria-controls="tab-achievements" id="tab-achievements-btn" tabindex="-1">
+                        <span aria-hidden="true">🏆</span>
+                        <span>Logros</span>
+                    </button>
+                </div>
+
+                <!-- Contenido de pestañas -->
+                <div class="tab-content">
+                    <!-- Cuidado -->
+                    <div class="tab-panel active" id="tab-care" role="tabpanel" aria-labelledby="tab-care-btn">
+                        <div class="action-buttons" role="group" aria-label="Acciones de cuidado">
+                            <button class="action-btn" data-action="feed" aria-label="Alimentar a la mascota">
+                                <span class="btn-icon" aria-hidden="true">🍖</span>
+                                <span class="btn-text">Comer</span>
+                                <span class="btn-cooldown" id="feedCooldown" aria-hidden="true"></span>
+                            </button>
+                            <button class="action-btn" data-action="play" aria-label="Jugar con la mascota">
+                                <span class="btn-icon" aria-hidden="true">🎮</span>
+                                <span class="btn-text">Jugar</span>
+                                <span class="btn-cooldown" id="playCooldown" aria-hidden="true"></span>
+                            </button>
+                            <button class="action-btn" data-action="sleep" aria-label="Poner a dormir a la mascota">
+                                <span class="btn-icon" aria-hidden="true">💤</span>
+                                <span class="btn-text">Dormir</span>
+                                <span class="btn-cooldown" id="sleepCooldown" aria-hidden="true"></span>
+                            </button>
+                            <button class="action-btn" data-action="clean" aria-label="Limpiar a la mascota">
+                                <span class="btn-icon" aria-hidden="true">🧹</span>
+                                <span class="btn-text">Limpiar</span>
+                                <span class="btn-cooldown" id="cleanCooldown" aria-hidden="true"></span>
+                            </button>
+                            <button class="action-btn" data-action="train" aria-label="Entrenar a la mascota">
+                                <span class="btn-icon" aria-hidden="true">🏋️</span>
+                                <span class="btn-text">Entrenar</span>
+                                <span class="btn-cooldown" id="trainCooldown" aria-hidden="true"></span>
+                            </button>
+                            <button class="action-btn" data-action="pet" aria-label="Acariciar a la mascota">
+                                <span class="btn-icon" aria-hidden="true">🤗</span>
+                                <span class="btn-text">Acariciar</span>
+                                <span class="btn-cooldown" id="petCooldown" aria-hidden="true"></span>
+                            </button>
+                            <button class="action-btn" data-action="medicine" aria-label="Dar medicina a la mascota">
+                                <span class="btn-icon" aria-hidden="true">💊</span>
+                                <span class="btn-text">Medicina</span>
+                                <span class="btn-cooldown" id="medicineCooldown" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Juegos -->
+                    <div class="tab-panel" id="tab-games" role="tabpanel" aria-labelledby="tab-games-btn">
+                        <div class="minigames-grid" role="group" aria-label="Minijuegos disponibles">
+                            <button class="minigame-btn" data-game="memory" aria-label="Jugar al juego de memoria">
+                                <span class="game-icon" aria-hidden="true">🧠</span>
+                                <span class="game-name">Memoria</span>
+                                <span class="game-desc">Encuentra las parejas</span>
+                                <span class="game-reward">+20 felicidad</span>
+                            </button>
+                            <button class="minigame-btn" data-game="clicker" aria-label="Jugar al juego de clics">
+                                <span class="game-icon" aria-hidden="true">👆</span>
+                                <span class="game-name">Clicker</span>
+                                <span class="game-desc">Haz clic rápido</span>
+                                <span class="game-reward">+15 felicidad</span>
+                            </button>
+                            <button class="minigame-btn" data-game="dance" aria-label="Jugar al juego de baile">
+                                <span class="game-icon" aria-hidden="true">💃</span>
+                                <span class="game-name">Bailar</span>
+                                <span class="game-desc">Sigue el ritmo</span>
+                                <span class="game-reward">+25 felicidad</span>
+                            </button>
+                            <button class="minigame-btn" data-game="quiz" aria-label="Jugar al quiz">
+                                <span class="game-icon" aria-hidden="true">❓</span>
+                                <span class="game-name">Quiz</span>
+                                <span class="game-desc">Responde preguntas</span>
+                                <span class="game-reward">+10 disciplina</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tienda -->
+                    <div class="tab-panel" id="tab-shop" role="tabpanel" aria-labelledby="tab-shop-btn">
+                        <div class="shop-header" role="status" aria-live="polite">
+                            <span aria-hidden="true">🪙</span>
+                            <span>Monedas: </span>
+                            <span id="coins" aria-label="Monedas disponibles">0</span>
+                        </div>
+                        <div class="shop-grid" role="group" aria-label="Artículos de la tienda">
+                            <div class="shop-item" data-item="food" role="article">
+                                <span class="item-icon" aria-hidden="true">🍕</span>
+                                <span class="item-name">Comida Premium</span>
+                                <span class="item-price" aria-label="Precio: 50 monedas">🪙 50</span>
+                                <span class="item-effect">+30 hambre</span>
+                                <button class="shop-buy" data-item="food" aria-label="Comprar comida premium">Comprar</button>
+                            </div>
+                            <div class="shop-item" data-item="toy" role="article">
+                                <span class="item-icon" aria-hidden="true">🧸</span>
+                                <span class="item-name">Juguete Nuevo</span>
+                                <span class="item-price" aria-label="Precio: 30 monedas">🪙 30</span>
+                                <span class="item-effect">+20 felicidad</span>
+                                <button class="shop-buy" data-item="toy" aria-label="Comprar juguete nuevo">Comprar</button>
+                            </div>
+                            <div class="shop-item" data-item="energy" role="article">
+                                <span class="item-icon" aria-hidden="true">🔋</span>
+                                <span class="item-name">Batería Extra</span>
+                                <span class="item-price" aria-label="Precio: 40 monedas">🪙 40</span>
+                                <span class="item-effect">+25 energía</span>
+                                <button class="shop-buy" data-item="energy" aria-label="Comprar batería extra">Comprar</button>
+                            </div>
+                            <div class="shop-item" data-item="skin" role="article">
+                                <span class="item-icon" aria-hidden="true">🎨</span>
+                                <span class="item-name">Skin Exclusiva</span>
+                                <span class="item-price" aria-label="Precio: 100 monedas">🪙 100</span>
+                                <span class="item-effect">Cambia de color</span>
+                                <button class="shop-buy" data-item="skin" aria-label="Comprar skin exclusiva">Comprar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logros -->
+                    <div class="tab-panel" id="tab-achievements" role="tabpanel" aria-labelledby="tab-achievements-btn">
+                        <div class="achievements-grid" id="achievementsGrid" role="list" aria-label="Lista de logros">
+                            <!-- Los logros se generan dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje -->
+                <div class="message-area" id="messageArea" role="status" aria-live="polite" aria-atomic="true">
+                    <span class="message-icon" aria-hidden="true">🐣</span>
+                    <span class="message-text">¡Bienvenido a Tamagotchi Ultimate!</span>
+                </div>
+
+                <!-- Estadísticas extras -->
+                <div class="stats-extras" role="group" aria-label="Estadísticas adicionales">
+                    <div class="stat-extra">
+                        <span aria-hidden="true">Peso:</span>
+                        <span id="weight" aria-label="Peso">10.0</span><span aria-hidden="true">kg</span>
+                    </div>
+                    <div class="stat-extra">
+                        <span aria-hidden="true">Generación:</span>
+                        <span id="generation" aria-label="Generación">1</span>
+                    </div>
+                    <div class="stat-extra">
+                        <span aria-hidden="true">Disciplina:</span>
+                        <span id="discipline" aria-label="Disciplina">50</span>
+                    </div>
+                    <div class="stat-extra">
+                        <span aria-hidden="true">🪙</span>
+                        <span id="coinsDisplay" aria-label="Monedas">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Controles -->
+            <footer class="controls" role="toolbar" aria-label="Controles del juego">
+                <button class="control-btn" id="resetBtn" aria-label="Reiniciar juego">🔄 Reset</button>
+                <button class="control-btn" id="saveBtn" aria-label="Guardar progreso">💾 Guardar</button>
+                <button class="control-btn" id="soundToggle" aria-label="Alternar sonido">🔊 Sonido</button>
+                <button class="control-btn" id="themeToggle" aria-label="Alternar tema">🌙 Tema</button>
+                <button class="control-btn" id="exportBtn" aria-label="Exportar datos">📤 Exportar</button>
+                <button class="control-btn" id="importBtn" aria-label="Importar datos">📥 Importar</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modales con accesibilidad -->
+    <div class="modal" id="minigameModal" role="dialog" aria-modal="true" aria-labelledby="minigameTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="minigameTitle">Mini Juego</h2>
+                <button class="modal-close" id="minigameClose" aria-label="Cerrar minijuego">✕</button>
+            </div>
+            <div class="modal-body" id="minigameBody" role="document">
+                <!-- Contenido del minijuego -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="achievementModal" role="dialog" aria-modal="true" aria-labelledby="achievementTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="achievementTitle">🏆 ¡Logro Desbloqueado!</h2>
+                <button class="modal-close" id="achievementClose" aria-label="Cerrar notificación de logro">✕</button>
+            </div>
+            <div class="modal-body" id="achievementBody" role="document">
+                <!-- Contenido del logro -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificación -->
+    <div class="notification" id="notification" role="alert" aria-live="assertive" aria-atomic="true">
+        <span class="notif-icon" aria-hidden="true"></span>
+        <span class="notif-text"></span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/audio.js" defer></script>
+    <script src="js/particles.js" defer></script>
+    <script src="js/minigames.js" defer></script>
+    <script src="js/achievements.js" defer></script>
+    <script src="js/tamagotchi.js" defer></script>
+    <script src="js/main.js" defer></script>
+</body>
+</html>

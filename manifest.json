@@ -1,0 +1,19 @@
+{
+  "name": "Tamagotchi Ultimate",
+  "short_name": "Tamagotchi",
+  "description": "Mascota virtual con todas las mecánicas clásicas y modernas",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='50' fill='%231a1a2e'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' fill='white'%3E🐣%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment", "simulation"]
+}
