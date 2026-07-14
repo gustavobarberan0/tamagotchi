@@ -42,8 +42,8 @@ class Tamagotchi {
             energy: 0,
             skin: 0
         };
-        this.skinColor = '#ff6b6b';
-        this.skinSecondary = '#c0392b';
+        this.skinColor = '#7fc97f';
+        this.skinSecondary = '#4a8f4a';
         this.theme = 'dark';
     }
 
@@ -308,16 +308,16 @@ class Tamagotchi {
         
         if (this.age >= 70) {
             this.evolutionStage = 4;
-            this.evolutionName = 'Anciano';
+            this.evolutionName = 'Rey Dino';
         } else if (this.age >= 40) {
             this.evolutionStage = 3;
-            this.evolutionName = 'Adulto';
+            this.evolutionName = 'T-Rex';
         } else if (this.age >= 20) {
             this.evolutionStage = 2;
-            this.evolutionName = 'Adolescente';
+            this.evolutionName = 'Raptor';
         } else if (this.age >= 10) {
             this.evolutionStage = 1;
-            this.evolutionName = 'Niño';
+            this.evolutionName = 'Dino Joven';
         } else {
             this.evolutionStage = 0;
             this.evolutionName = 'Bebé';
@@ -352,11 +352,12 @@ class Tamagotchi {
     // ============================================
     
     getEmoji() {
-        if (!this.isAlive) return '💀';
+        if (!this.isAlive) return '🦴';
         if (this.isSleeping) return '😴';
         if (this.sick) return '🤒';
         
-        const stages = ['🐣', '🐥', '🐦', '🐔', '🦉'];
+        // Emojis de dinosaurio para las etapas de evolución
+        const stages = ['🦕', '🐉', '🦖', '🦎', '🐲'];
         let emoji = stages[Math.min(this.evolutionStage, stages.length - 1)];
         
         if (this.poopCount > 0) emoji = '💩' + emoji;
